@@ -655,7 +655,7 @@ function renderItem(s){
   if(s.hp)h+=`<a href="${esc(s.hp)}" target="_blank" rel="noopener" class="btn-action btn-hp">\u{1F3E0} 公式ホームページ</a>`;
   if(DETAIL[s.id])h+=`<button class="btn-action btn-detail" onclick="openDetail(${s.id})">\u{1F4CB} 斎場詳細</button>`;
   else h+=`<span class="btn-action btn-disabled">\u{1F4CB} 詳細資料準備中</span>`;
-  if(PAMPH[s.id])PAMPH[s.id].forEach(p=>{h+=`<a href="/${encodeURIComponent(p.file)}" target="_blank" rel="noopener" class="btn-action btn-pamph">\u{1F4D6} ${esc(p.label)}</a>`;});
+  if(PAMPH[s.id])PAMPH[s.id].forEach(p=>{h+=`<a href="${encodeURIComponent(p.file)}" target="_blank" rel="noopener" class="btn-action btn-pamph">\u{1F4D6} ${esc(p.label)}</a>`;});
   h+=`</div>`;
 
   h+=`</div>`;
