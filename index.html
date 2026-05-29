@@ -347,7 +347,7 @@ const PAMPH={
  2:[{label:"パンフレット・利用の手引き",file:"guidance-202604.pdf"},{label:"葬儀会社向け利用",file:"sougigaishamukeriyou.pdf"},{label:"ご利用について変更点",file:"goriyounituitehenkouten.pdf"},{label:"利用者向け利用ルール",file:"riyoushamukeriyouruuru.pdf"}],
  3:[{label:"パンフレット・利用の手引き",file:"guidance-202604.pdf"}],
  4:[{label:"パンフレット・利用の手引き",file:"guidance-202604.pdf"},{label:"リニューアル",file:"rinyuuaru.pdf"}],
- 5:[{label:"斎場パンフレット",file:"pamphlet.pdf"},{label:"交通案内（電車）",file:"map_train.pdf"},{label:"交通案内（地図）",file:"map.pdf"},{label:"利用のご案内",file:"1-1.pdf"}],
+ 5:[{label:"斎場パンフレット",file:"pamphlet.pdf"},{label:"交通案内（電車）",file:"map_train.pdf"},{label:"交通案内（地図）",file:"map.pdf"},{label:"利用のご案内",file:"1-1.pdf"},{label:"売店商品一覧",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-2.pdf"},{label:"売店注文用紙",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-3.pdf"},{label:"仕出し弁当・おしのぎ一覧",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-4.pdf"},{label:"仕出し弁当注文用紙",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-5-1.pdf"},{label:"仕出し弁当注文用紙（記入例）",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-5-2.pdf"},{label:"おしのぎ注文用紙",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-6.pdf"}],
  6:[{label:"利用申請書類",file:"kasousougirenrakuhyou.pdf"}],
  8:[{label:"予約確認票",file:"予約確認票【令和6年度版】.pdf"},{label:"使用許可申請書",file:"使用許可申請書【令和版】.pdf"}],
  9:[{label:"パンフレット",file:"d1c1bc30338534871bf27ec1a80df6da.pdf"}],
@@ -658,7 +658,7 @@ function renderItem(s){
   if(s.hp)h+=`<a href="${esc(s.hp)}" target="_blank" rel="noopener" class="btn-action btn-hp">\u{1F3E0} 公式ホームページ</a>`;
   if(DETAIL[s.id])h+=`<button class="btn-action btn-detail" onclick="openDetail(${s.id})">\u{1F4CB} 斎場詳細</button>`;
   else h+=`<span class="btn-action btn-disabled">\u{1F4CB} 詳細資料準備中</span>`;
-  if(PAMPH[s.id])PAMPH[s.id].forEach(p=>{h+=`<a href="${encodeURIComponent(p.file)}" target="_blank" rel="noopener" class="btn-action btn-pamph">\u{1F4D6} ${esc(p.label)}</a>`;});
+  if(PAMPH[s.id])PAMPH[s.id].forEach(p=>{const ph=p.file.startsWith('http')?p.file:encodeURIComponent(p.file);h+=`<a href="${ph}" target="_blank" rel="noopener" class="btn-action btn-pamph">\u{1F4D6} ${esc(p.label)}</a>`;});
   h+=`</div>`;
 
   h+=`</div>`;
