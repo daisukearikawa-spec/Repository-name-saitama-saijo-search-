@@ -680,8 +680,9 @@ function availTag(v){
 function bookingTag(s){
   if(!s)return'<span class="booking-tag" style="background:#eee;color:#999">未確認</span>';
   const tags=[];
-  if(s.includes("web"))tags.push('<span class="booking-tag booking-web">WEB予約</span>');
-  if(s.includes("tel"))tags.push('<span class="booking-tag booking-tel">電話予約</span>');
+  if(s==="web+tel"){tags.push('<span class="booking-tag booking-web">WEB空き確認</span>');tags.push('<span class="booking-tag booking-tel">電話予約</span>');}
+  else{if(s.includes("web"))tags.push('<span class="booking-tag booking-web">WEB予約</span>');
+  if(s.includes("tel"))tags.push('<span class="booking-tag booking-tel">電話予約</span>');}
   if(s.includes("window"))tags.push('<span class="booking-tag booking-window">窓口予約</span>');
   return tags.join(" ");
 }
@@ -719,7 +720,7 @@ function renderItem(s){
 
   /* Action buttons */
   h+=`<div class="btn-row">`;
-  if(s.bookingUrl){const bLabel=s.booking?"\u{1F310} WEB予約":(s.fac.includes("c")&&s.fac.includes("h")?"\u{1F4C5} 火葬場・式場空き状況":"\u{1F4C5} 式場空き状況");h+=`<a href="${esc(s.bookingUrl)}" target="_blank" rel="noopener" class="btn-action btn-web">${bLabel}</a>`;}
+  if(s.bookingUrl){const bLabel=s.booking==="web+tel"?"\u{1F4C5} 空き状況をWEBで確認":s.booking?"\u{1F310} WEB予約":(s.fac.includes("c")&&s.fac.includes("h")?"\u{1F4C5} 火葬場・式場空き状況":"\u{1F4C5} 式場空き状況");h+=`<a href="${esc(s.bookingUrl)}" target="_blank" rel="noopener" class="btn-action btn-web">${bLabel}</a>`;}
   if(s.tel)h+=`<a href="tel:${s.tel}" class="btn-action btn-tel">\u{1F4DE} 斎場に電話する</a>`;
   if(s.hp)h+=`<a href="${esc(s.hp)}" target="_blank" rel="noopener" class="btn-action btn-hp">\u{1F3E0} 公式ホームページ</a>`;
   if(DETAIL[s.id])h+=`<button class="btn-action btn-detail" onclick="openDetail(${s.id})">\u{1F4CB} 斎場詳細</button>`;
