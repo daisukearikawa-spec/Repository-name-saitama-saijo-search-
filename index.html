@@ -740,7 +740,7 @@ function renderItem(s){
   if(s.fac.includes("h")&&s.halls&&s.halls.length>0){
     const hallStr=s.halls.map(x=>`${esc(x.n)}：${typeof x.s==="number"?x.s+"席":x.s+"席"}`).join("<br>");
     h+=`<tr><th>\u{1F3DB}\u{FE0F} 式場（${s.halls.length}室）</th><td>${hallStr}</td></tr>`;
-    if(s.hallNote){h+=`<tr><th>\u{1F4CB} 式場スケジュール</th><td><span style="font-size:.85rem">${esc(s.hallNote)}</span></td></tr>`;}
+    if(s.hallNote){h+=`<tr><th>\u{1F4CB} 式場スケジュール</th><td><span style="font-size:.85rem">${s.hallNote.split("／").map(x=>esc(x.trim())).join("<br>")}</span></td></tr>`;}
     if(s.fac.includes("c"))h+=`<tr><th>組合外の式場利用</th><td>${availTag(s.hallNm)}</td></tr>`;
     if(s.departMin!==undefined&&s.departMin!==null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td>火葬予約時間の <span style="font-weight:700;color:var(--red)">${s.departMin}分前</span> に出棺</td></tr>`;}
     else if(s.departMin===null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="color:var(--gray-dark);font-size:.75rem">確認中</span></td></tr>`;}
