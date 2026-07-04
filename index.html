@@ -249,7 +249,7 @@ const D=[
  tel:"048-569-2800",fax:"048-569-2838",booking:"web",bookingUrl:"https://saijyo4.seagulloffice.com/keno-mizuho/user/top?1912080747&__SANE_MI__=rl#logoutModal",hp:"https://mizuho-kasou.com/",departMin:null,
  note:"火葬炉8基。式場は管外2倍料金。待合室6室。霊安室は管内住民のみ。指定管理：県央みずほ斎苑管理グループ。"},
 {id:12,name:"越谷市斎場",addr:"越谷市大字増林3989番地1",op:"越谷市（市民協働部 市民課 斎場）",tp:"public",fac:["c","h"],mun:["越谷市","吉川市","松伏町"],
- halls:[{n:"第1〜第4式場(各)",s:80}],
+ halls:[{n:"第1〜第4式場(各)",s:80}],hallNote:"11時火葬=式場1・3(告別式 9:30〜10:30) ／ 12時火葬=式場2・4(告別式 10:30〜11:30)",
  fee:{m:10000,nm:80000},hallNm:"no",cremNm:"yes",wait:"14室(各定員40人)",waitFee:{m:4000,nm:32000},
  tel:"048-960-6800",fax:"048-960-6801",booking:"web",bookingUrl:"https://koshigaya-saijou-yoyaku.jp/yoyaku/",hp:"https://www.city.koshigaya.saitama.jp/toiawase/shisetsu/saijo/saijo.html",departMin:null,
  note:"式場4室（管内利用者限定）。第3・4統合利用可（160名）。常設祭壇（仏式・厨子式・神式・キリスト教式）花祭壇等持込可。火葬炉14基。霊安室8室。友引日休業。"},
@@ -740,6 +740,7 @@ function renderItem(s){
   if(s.fac.includes("h")&&s.halls&&s.halls.length>0){
     const hallStr=s.halls.map(x=>`${esc(x.n)}：${typeof x.s==="number"?x.s+"席":x.s+"席"}`).join("<br>");
     h+=`<tr><th>\u{1F3DB}\u{FE0F} 式場（${s.halls.length}室）</th><td>${hallStr}</td></tr>`;
+    if(s.hallNote){h+=`<tr><th>\u{1F4CB} 式場スケジュール</th><td><span style="font-size:.85rem">${esc(s.hallNote)}</span></td></tr>`;}
     if(s.fac.includes("c"))h+=`<tr><th>組合外の式場利用</th><td>${availTag(s.hallNm)}</td></tr>`;
     if(s.departMin!==undefined&&s.departMin!==null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td>火葬予約時間の <span style="font-weight:700;color:var(--red)">${s.departMin}分前</span> に出棺</td></tr>`;}
     else if(s.departMin===null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="color:var(--gray-dark);font-size:.75rem">確認中</span></td></tr>`;}
