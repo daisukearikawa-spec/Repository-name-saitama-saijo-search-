@@ -337,7 +337,7 @@ const CRED={
  9:{lid:"200000037",pw:"sinonome"},
  10:{lid:"161700",pw:"ceremore0111"},
  11:{lid:"202600",pw:"mizu0130"},
- 12:{lid:"cere0111",pw:"ceremore1 or 2 or 3"},
+ 12:{lid:"cere0111",pw:"ceremore1 or 2 or 3",note:"※パスワード末尾の1・2・3は三か月ごとに変わる"},
  13:{lid:"25159",pw:"1114"},
  18:{lid:"cere01k",pw:"3iit5p"},
  19:{lid:"kuma509",pw:"9833000"},
@@ -724,7 +724,7 @@ function renderItem(s){
   /* Info table */
   h+=`<table class="info-table">`;
   const cr=CRED[s.id];
-  h+=`<tr><th>\u{1F4C5} 予約方法</th><td>${bookingTag(s.booking)}${cr?`<span class="cred-inline"><span class="cred-item"><span class="cred-label">ID</span><span class="cred-val" onclick="copyVal(this)">${esc(cr.lid)}</span><span class="copied-msg">✓</span></span><span class="cred-item"><span class="cred-label">PW</span><span class="cred-val" onclick="copyVal(this)">${esc(cr.pw)}</span><span class="copied-msg">✓</span></span></span>`:''}</td></tr>`;
+  h+=`<tr><th>\u{1F4C5} 予約方法</th><td>${bookingTag(s.booking)}${cr?`<span class="cred-inline"><span class="cred-item"><span class="cred-label">ID</span><span class="cred-val" onclick="copyVal(this)">${esc(cr.lid)}</span><span class="copied-msg">✓</span></span><span class="cred-item"><span class="cred-label">PW</span><span class="cred-val" onclick="copyVal(this)">${esc(cr.pw)}</span><span class="copied-msg">✓</span></span></span>`:''}${cr&&cr.note?`<br><span style="font-size:.75rem;color:#c62828">${esc(cr.note)}</span>`:''}</td></tr>`;
   if(s.tel)h+=`<tr><th>\u{260E}\u{FE0F} TEL</th><td><a href="tel:${s.tel}" style="color:var(--navy);font-weight:600">${esc(s.tel)}</a>${s.fax?' <span style="font-size:.75rem;color:var(--gray-dark)">FAX:'+esc(s.fax)+'</span>':''}</td></tr>`;
   if(s.fac.includes("c")){
     h+=`<tr><th>\u{1F525} 火葬料</th><td><span style="font-weight:700;color:var(--navy-dark)">${yen(s.fee.m)}</span> <span style="font-size:.75rem;color:var(--gray-dark)">／組合外</span> <span style="font-weight:600;color:var(--red)">${yen(s.fee.nm)}</span></td></tr>`;
