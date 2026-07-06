@@ -112,6 +112,26 @@ header p{font-size:.85rem;color:var(--gold-light);letter-spacing:.05em}
 .modal-table td{padding:6px 10px;border-bottom:1px solid var(--gray-mid)}
 .modal-warnings{margin:4px 0;padding-left:0;list-style:none;font-size:.82rem}
 .modal-warnings li{padding:4px 8px;margin-bottom:3px;background:#fff8e1;border-left:3px solid #ff9800;border-radius:0 4px 4px 0;color:#6d5600}
+/* Gallery */
+.gallery-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:2000;flex-direction:column;align-items:center;justify-content:center}
+.gallery-overlay.open{display:flex}
+.gallery-header{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;color:#fff;z-index:2}
+.gallery-title{font-size:.9rem;font-weight:600}
+.gallery-counter{font-size:.8rem;opacity:.7}
+.gallery-close{background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;padding:0 8px;line-height:1}
+.gallery-body{display:flex;align-items:center;justify-content:center;width:100%;height:100%;position:relative}
+.gallery-img{max-width:90vw;max-height:60vh;object-fit:contain;border-radius:4px;user-select:none;-webkit-user-drag:none}
+.gallery-caption{position:absolute;bottom:68px;left:0;right:0;text-align:center;color:#fff;padding:8px 16px}
+.gallery-cap-title{font-size:.95rem;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.gallery-cap-note{font-size:.82rem;margin-top:4px;background:rgba(0,0,0,.55);display:inline-block;padding:4px 12px;border-radius:6px;max-width:90vw;line-height:1.5}
+.gallery-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;font-size:2rem;cursor:pointer;padding:12px 16px;border-radius:8px;z-index:2;transition:background .2s}
+.gallery-nav:hover{background:rgba(255,255,255,.3)}
+.gallery-prev{left:8px}
+.gallery-next{right:8px}
+.gallery-thumbs{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:6px;padding:0 16px;overflow-x:auto}
+.gallery-thumb{width:48px;height:48px;object-fit:cover;border-radius:4px;cursor:pointer;opacity:.5;border:2px solid transparent;transition:all .2s;flex-shrink:0}
+.gallery-thumb.active{opacity:1;border-color:var(--gold)}
+.btn-gallery{background:#455a64;color:var(--white)}
 footer{text-align:center;padding:20px;font-size:.75rem;color:var(--gray-dark);border-top:1px solid var(--gray-mid);margin-top:10px}
 footer .warn{color:var(--red);font-weight:600}
 @media(max-width:600px){
@@ -131,6 +151,8 @@ footer .warn{color:var(--red);font-weight:600}
   .modal-content{margin:10px auto}
   .modal-body{padding:16px}
   .tab-btn{padding:8px 12px;font-size:.78rem}
+  .gallery-nav{padding:8px 12px;font-size:1.5rem}
+  .gallery-thumb{width:40px;height:40px}
 }
 @media print{
   header{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -190,6 +212,20 @@ footer .warn{color:var(--red);font-weight:600}
     </div>
     <div class="modal-body" id="detailBody"></div>
   </div>
+</div>
+<div id="galleryModal" class="gallery-overlay" onclick="if(event.target===this)closeGallery()">
+  <div class="gallery-header">
+    <span class="gallery-title" id="galleryTitle"></span>
+    <span class="gallery-counter" id="galleryCounter"></span>
+    <button class="gallery-close" onclick="closeGallery()">&times;</button>
+  </div>
+  <div class="gallery-body">
+    <button class="gallery-nav gallery-prev" onclick="galNav(-1)">&#8249;</button>
+    <img class="gallery-img" id="galleryImg" alt="">
+    <button class="gallery-nav gallery-next" onclick="galNav(1)">&#8250;</button>
+    <div class="gallery-caption" id="galleryCaption"></div>
+  </div>
+  <div class="gallery-thumbs" id="galleryThumbs"></div>
 </div>
 <footer>
   <p class="warn">※ 本データは各公式サイト・埼玉県公式情報・各斎場提供資料を基に作成していますが、最新の正確な情報は各斎場・各自治体にご確認ください。</p>
@@ -343,6 +379,10 @@ const CRED={
  19:{lid:"kuma509",pw:"9833000"},
  22:{lid:"gyoda015",pw:"ceremore0111"}
 };
+
+const GALLERY={
+};
+const GAL_DIR={1:"1_urawa",2:"2_omiya",3:"3_hikari",4:"4_omoide",5:"5_meguri",6:"6_kawagoe",7:"7_tokorozawa",8:"8_hanno",9:"9_shinonome",10:"10_tsutsuji",11:"11_kenomizuho",12:"12_koshigaya",13:"13_saikatsu",14:"14_tone",15:"15_misato",16:"16_higashimatsuyama",17:"17_hanamizuki",18:"18_chichibu",19:"19_saiun",20:"20_tsuki",21:"21_kodama",22:"22_gyoda",23:"23_hanyu",24:"24_yatsuka",25:"25_mizuho",26:"26_asaka",27:"27_niiza"};
 
 const PAMPH={
  1:[{label:"パンフレット・利用の手引き",file:"guidance-202604.pdf"}],
@@ -757,6 +797,7 @@ function renderItem(s){
   if(s.hp)h+=`<a href="${esc(s.hp)}" target="_blank" rel="noopener" class="btn-action btn-hp">\u{1F3E0} 公式ホームページ</a>`;
   if(DETAIL[s.id])h+=`<button class="btn-action btn-detail" onclick="openDetail(${s.id})">\u{1F4CB} 斎場詳細</button>`;
   else h+=`<span class="btn-action btn-disabled">\u{1F4CB} 詳細資料準備中</span>`;
+  if(GALLERY[s.id])h+=`<button class="btn-action btn-gallery" onclick="openGallery(${s.id})">\u{1F4F7} 画像</button>`;
   if(PAMPH[s.id])PAMPH[s.id].forEach(p=>{const ph=p.file.startsWith('http')?p.file:encodeURIComponent(p.file);h+=`<a href="${ph}" target="_blank" rel="noopener" class="btn-action btn-pamph">\u{1F4D6} ${esc(p.label)}</a>`;});
   h+=`</div>`;
 
@@ -798,6 +839,46 @@ function closeDetail(){
   document.getElementById("detailModal").classList.remove("open");
   document.body.style.overflow="";
 }
+
+/* ===== Gallery ===== */
+let galData=[],galIdx=0;
+function openGallery(id){
+  const f=D.find(x=>x.id===id);
+  galData=GALLERY[id]||[];if(!galData.length)return;
+  galIdx=0;
+  document.getElementById("galleryTitle").textContent=f?f.name+" の画像":"画像";
+  galShow();
+  document.getElementById("galleryModal").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeGallery(){
+  document.getElementById("galleryModal").classList.remove("open");
+  document.body.style.overflow="";
+}
+function galShow(){
+  const g=galData[galIdx];
+  document.getElementById("galleryImg").src=g.src;
+  document.getElementById("galleryImg").alt=g.cap||"";
+  let capH=g.cap?`<div class="gallery-cap-title">${esc(g.cap)}</div>`:"";
+  if(g.note)capH+=`<div class="gallery-cap-note">${esc(g.note)}</div>`;
+  document.getElementById("galleryCaption").innerHTML=capH;
+  document.getElementById("galleryCounter").textContent=(galIdx+1)+"/"+galData.length;
+  const tb=document.getElementById("galleryThumbs");
+  tb.innerHTML=galData.map((t,i)=>`<img class="gallery-thumb${i===galIdx?" active":""}" src="${t.src}" alt="${esc(t.cap||"")}" onclick="galIdx=${i};galShow()">`).join("");
+  document.querySelector(".gallery-prev").style.display=galData.length>1?"":"none";
+  document.querySelector(".gallery-next").style.display=galData.length>1?"":"none";
+}
+function galNav(d){galIdx=(galIdx+d+galData.length)%galData.length;galShow();}
+document.addEventListener("keydown",e=>{
+  if(!document.getElementById("galleryModal").classList.contains("open"))return;
+  if(e.key==="Escape")closeGallery();
+  if(e.key==="ArrowLeft")galNav(-1);
+  if(e.key==="ArrowRight")galNav(1);
+});
+(()=>{let sx=0;const g=document.getElementById("galleryModal");
+g.addEventListener("touchstart",e=>{sx=e.touches[0].clientX;},{passive:true});
+g.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50){dx<0?galNav(1):galNav(-1);}},{passive:true});
+})();
 
 /* ===== Core Functions ===== */
 function init(){
