@@ -132,6 +132,14 @@ header p{font-size:.85rem;color:var(--gold-light);letter-spacing:.05em}
 .gallery-thumb{width:48px;height:48px;object-fit:cover;border-radius:4px;cursor:pointer;opacity:.5;border:2px solid transparent;transition:all .2s;flex-shrink:0}
 .gallery-thumb.active{opacity:1;border-color:var(--gold)}
 .btn-gallery{background:#455a64;color:var(--white)}
+.btn-memo{background:#37474f;color:var(--white)}
+.memo-box{display:none;margin-top:10px;border:1px solid var(--gray-mid);border-radius:8px;overflow:hidden}
+.memo-box.open{display:block}
+.memo-header{background:#37474f;color:#fff;padding:8px 12px;font-size:.82rem;font-weight:700}
+.memo-item{padding:8px 12px;border-bottom:1px solid var(--gray-mid);font-size:.82rem;line-height:1.6}
+.memo-item:last-child{border-bottom:none}
+.memo-date{font-size:.72rem;color:var(--gray-dark);margin-bottom:2px}
+.memo-text{color:#333}
 footer{text-align:center;padding:20px;font-size:.75rem;color:var(--gray-dark);border-top:1px solid var(--gray-mid);margin-top:10px}
 footer .warn{color:var(--red);font-weight:600}
 @media(max-width:600px){
@@ -378,6 +386,9 @@ const CRED={
  18:{lid:"cere01k",pw:"3iit5p"},
  19:{lid:"kuma509",pw:"9833000"},
  22:{lid:"gyoda015",pw:"ceremore0111"}
+};
+
+const MEMO={
 };
 
 const GALLERY={
@@ -798,8 +809,16 @@ function renderItem(s){
   if(DETAIL[s.id])h+=`<button class="btn-action btn-detail" onclick="openDetail(${s.id})">\u{1F4CB} 斎場詳細</button>`;
   else h+=`<span class="btn-action btn-disabled">\u{1F4CB} 詳細資料準備中</span>`;
   if(GALLERY[s.id])h+=`<button class="btn-action btn-gallery" onclick="openGallery(${s.id})">\u{1F4F7} 画像</button>`;
+  if(MEMO[s.id])h+=`<button class="btn-action btn-memo" onclick="toggleMemo(${s.id})">\u{1F4DD} 現場メモ（${MEMO[s.id].length}件）</button>`;
   if(PAMPH[s.id])PAMPH[s.id].forEach(p=>{const ph=p.file.startsWith('http')?p.file:encodeURIComponent(p.file);h+=`<a href="${ph}" target="_blank" rel="noopener" class="btn-action btn-pamph">\u{1F4D6} ${esc(p.label)}</a>`;});
   h+=`</div>`;
+
+  if(MEMO[s.id]){
+    h+=`<div class="memo-box" id="memo-${s.id}">`;
+    h+=`<div class="memo-header">\u{1F4DD} 現場メモ</div>`;
+    MEMO[s.id].forEach(m=>{h+=`<div class="memo-item"><div class="memo-date">${esc(m.d)}</div><div class="memo-text">${esc(m.t)}</div></div>`;});
+    h+=`</div>`;
+  }
 
   h+=`</div>`;
   return h;
@@ -839,6 +858,9 @@ function closeDetail(){
   document.getElementById("detailModal").classList.remove("open");
   document.body.style.overflow="";
 }
+
+/* ===== Memo ===== */
+function toggleMemo(id){document.getElementById("memo-"+id).classList.toggle("open");}
 
 /* ===== Gallery ===== */
 let galData=[],galIdx=0;
