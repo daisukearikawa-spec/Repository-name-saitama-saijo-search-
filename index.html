@@ -268,7 +268,7 @@ const D=[
  tel:"049-226-0090",fax:"049-226-7088",booking:"web",bookingUrl:"https://www.kawagoe-saijo.jp/yoyaku/",hp:"https://www.city.kawagoe.saitama.jp/kurashi/1004113/1004116/1004117.html",departMin:null,
  note:"市民火葬無料。火葬はどなたでも可。式場は故人or喪主が市民の場合利用可。祭壇持込不可。式場計8室。冬期(12〜3月)は1日20件。"},
 {id:7,name:"所沢市斎場",addr:"所沢市北原町1282番地",op:"所沢市（指定管理：所沢市公共施設管理公社）",tp:"public",fac:["c","h"],mun:["所沢市"],
- halls:[{n:"第1式場",s:85},{n:"第2式場",s:50},{n:"第3式場",s:50},{n:"第5式場",s:40}],
+ halls:[{n:"第1式場",s:85},{n:"第2式場",s:50},{n:"第3式場",s:50},{n:"第5式場",s:40}],hallMemo:"※WEB予約の空きの〇は火葬日",
  fee:{m:5000,nm:60000},hallNm:"yes",cremNm:"yes",wait:"5室",waitFee:{m:2100,nm:7340},
  tel:"04-2993-9931",fax:null,booking:"web",bookingUrl:"https://saijyo3.seagulloffice.com/tokorozawa/user",hp:"https://www.city.tokorozawa.saitama.jp/shisetu/lifeline/saijo/saijo.html",departMin:null,
  note:"火葬炉8基。式場は控室セット利用必須。市内判定＝死亡者の住民登録地。出入口PM12:00閉鎖〜翌AM5:00開場。"},
@@ -790,7 +790,7 @@ function renderItem(s){
   }
   if(s.fac.includes("h")&&s.halls&&s.halls.length>0){
     const hallStr=s.halls.map(x=>`${esc(x.n)}：${typeof x.s==="number"?x.s+"席":x.s+"席"}`).join("<br>");
-    h+=`<tr><th>\u{1F3DB}\u{FE0F} 式場（${s.halls.length}室）</th><td>${hallStr}${s.hallMemo?`<br><span style="font-size:.75rem;color:#c62828">${esc(s.hallMemo)}</span>`:''}</td></tr>`;
+    h+=`<tr><th>\u{1F3DB}\u{FE0F} 式場（${s.halls.length}室）</th><td>${s.hallMemo?`<span style="font-size:.75rem;color:#c62828">${esc(s.hallMemo)}</span><br>`:''} ${hallStr}</td></tr>`;
     if(s.hallNote){h+=`<tr><th>\u{1F4CB} 式場スケジュール</th><td><span style="font-size:.85rem">${s.hallNote.split("／").map(x=>{const t=x.trim();return t.startsWith("※")?`<span style="color:#c62828">${esc(t)}</span>`:esc(t);}).join("<br>")}</span></td></tr>`;}
     if(s.fac.includes("c"))h+=`<tr><th>組合外の式場利用</th><td>${availTag(s.hallNm)}</td></tr>`;
     if(s.departMin!==undefined&&s.departMin!==null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td>火葬予約時間の <span style="font-weight:700;color:var(--red)">${s.departMin}分前</span> に出棺</td></tr>`;}
