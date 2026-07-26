@@ -313,7 +313,8 @@ const D=[
  tel:"048-952-5885",fax:"048-952-8853",booking:"web",bookingUrl:"https://misatoshi-saijo.jp/SousaiMng/index.aspx",hp:"https://www.city.misato.lg.jp/soshiki/shiminseikatsu/shimin/4/3840.html",departMin:null,
  note:"令和8年4月改定料金。本館は市外利用可。新館・安置室は市内専用。火葬炉4基（うち大棺対応1基）。待合室8室（無料）。安置室1室（市内専用）。駐車場約120台。友引は火葬不可・友引前日通夜不可。1/1・1/2休場。"},
 {id:16,name:"東松山斎場",addr:"東松山市松山町2丁目8番32号",op:"比企広域市町村圏組合",tp:"public",fac:["c","h"],mun:["東松山市","滑川町","嵐山町","小川町","川島町","吉見町","ときがわ町","東秩父村"],
- halls:[{n:"葬祭場",s:100}],hallUse:"通夜（設営）から告別式の二日間の場合は通夜日から借りる／※翌日の告別式は10:00〜11:00がベスト（11:30予約）",
+ halls:[{n:"葬祭場",s:100}],hallFee:"告別式：市民 10,000円（3時間利用）／通夜：市民 50,000円（15:00〜翌9:00）／※二日間（通夜＋告別式）なら60,000円",
+ hallUse:"通夜（設営）から告別式の二日間の場合は通夜日から借りる／※翌日の告別式は10:00〜11:00がベスト（11:30予約）",
  hallDay:"【通夜（設営）利用者】翌日は9:00〜12:00の3時間利用／告別式 10:00〜11:00（火葬11:30予約）／12:00から次の業者が飾り付けに入る／【1日借り・午前の告別式】9:00〜12:00の利用／9:00 飾り付け → 告別式 10:00〜11:00（火葬11:30予約）→ 12:00 完全撤収／【1日借り・午後の告別式】12:00〜15:00の利用／12:00 飾り付け → 告別式 13:00〜14:00（火葬14:30予約）→ 15:00 完全撤収",
  fee:{m:10000,nm:70000},hallNm:"yes",cremNm:"yes",wait:"7室(最大72席)",waitFee:{m:3000,nm:8000},
  tel:"0493-22-4279",fax:"0493-22-5695",booking:"web+tel",bookingUrl:"https://higashimatsuyamasaijou.com/reservation/",hp:"https://higashimatsuyamasaijou.com/",departMin:null,
@@ -793,6 +794,7 @@ function renderItem(s){
   if(s.fac.includes("h")&&s.halls&&s.halls.length>0){
     const hallStr=s.halls.map(x=>`${esc(x.n)}：${typeof x.s==="number"?x.s+"席":x.s+"席"}`).join("<br>");
     h+=`<tr><th>\u{1F3DB}\u{FE0F} 式場（${s.halls.length}室）</th><td>${s.hallMemo?`<span style="font-size:.75rem;color:#c62828">${s.hallMemo.split("／").map(x=>esc(x.trim())).join("<br>")}</span><br>`:''} ${hallStr}</td></tr>`;
+    if(s.hallFee){h+=`<tr><th>\u{1F4B4} 式場利用料金</th><td><span style="font-size:.85rem">${s.hallFee.split("／").map(x=>{const t=x.trim();return t.startsWith("※")?`<span style="color:#c62828">${esc(t)}</span>`:esc(t).replace(/([0-9,]+円)/g,'<span style="font-weight:700;color:var(--navy-dark)">$1</span>');}).join("<br>")}</span></td></tr>`;}
     if(s.hallUse){h+=`<tr><th>\u{1F56F}\u{FE0F} 式場利用方法</th><td><span style="font-size:.85rem">${s.hallUse.split("／").map(x=>{const t=x.trim();return t.startsWith("※")?`<span style="color:#c62828">${esc(t)}</span>`:`<span style="font-weight:600">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.hallDay){h+=`<tr><th>\u{1F5D3}\u{FE0F} 1日借り可能</th><td><span style="font-size:.85rem">${s.hallDay.split("／").map(x=>{const t=x.trim();return t.startsWith("【")?`<span style="font-weight:700;color:var(--navy-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.hallNote){h+=`<tr><th>\u{1F4CB} 式場スケジュール</th><td><span style="font-size:.85rem">${s.hallNote.split("／").map(x=>{const t=x.trim();return t.startsWith("※")?`<span style="color:#c62828">${esc(t)}</span>`:esc(t);}).join("<br>")}</span></td></tr>`;}
