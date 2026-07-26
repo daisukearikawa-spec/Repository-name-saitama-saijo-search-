@@ -270,7 +270,7 @@ const D=[
 {id:7,name:"所沢市斎場",addr:"所沢市北原町1282番地",op:"所沢市（指定管理：所沢市公共施設管理公社）",tp:"public",fac:["c","h"],mun:["所沢市"],
  halls:[{n:"第1式場",s:85},{n:"第2式場",s:50},{n:"第3式場",s:50},{n:"第5式場",s:40}],hallMemo:"※WEB予約の空きの〇は火葬日／※出棺は予約時間の30分前",
  fee:{m:5000,nm:60000},hallNm:"yes",cremNm:"yes",wait:"5室",waitFee:{m:2100,nm:7340},
- tel:"04-2993-9931",fax:null,booking:"web",bookingUrl:"https://saijyo3.seagulloffice.com/tokorozawa/user",hp:"https://www.city.tokorozawa.saitama.jp/shisetu/lifeline/saijo/saijo.html",departMin:null,
+ tel:"04-2993-9931",fax:null,booking:"web",bookingUrl:"https://saijyo3.seagulloffice.com/tokorozawa/user",hp:"https://www.city.tokorozawa.saitama.jp/shisetu/lifeline/saijo/saijo.html",departMin:null,departNote:"【場内】火葬予約時間の30分前に出棺（45分前でも可）",
  note:"火葬炉8基。式場は控室セット利用必須。市内判定＝死亡者の住民登録地。出入口PM12:00閉鎖〜翌AM5:00開場。"},
 {id:8,name:"広域飯能斎場",addr:"飯能市大字飯能948番地の3",op:"広域飯能斎場組合（飯能市・狭山市・日高市）",tp:"public",fac:["c","h"],mun:["飯能市","狭山市","日高市"],
  halls:[{n:"葬祭場",s:70}],
@@ -313,9 +313,11 @@ const D=[
  tel:"048-952-5885",fax:"048-952-8853",booking:"web",bookingUrl:"https://misatoshi-saijo.jp/SousaiMng/index.aspx",hp:"https://www.city.misato.lg.jp/soshiki/shiminseikatsu/shimin/4/3840.html",departMin:null,
  note:"令和8年4月改定料金。本館は市外利用可。新館・安置室は市内専用。火葬炉4基（うち大棺対応1基）。待合室8室（無料）。安置室1室（市内専用）。駐車場約120台。友引は火葬不可・友引前日通夜不可。1/1・1/2休場。"},
 {id:16,name:"東松山斎場",addr:"東松山市松山町2丁目8番32号",op:"比企広域市町村圏組合",tp:"public",fac:["c","h"],mun:["東松山市","滑川町","嵐山町","小川町","川島町","吉見町","ときがわ町","東秩父村"],
- halls:[{n:"葬祭場",s:100}],
+ halls:[{n:"葬祭場",s:100}],hallUse:"通夜（設営）から告別式の二日間の場合は通夜日から借りる／※翌日の告別式は10:00〜11:00がベスト（11:30予約）",
+ hallDay:"【通夜（設営）利用者】翌日は9:00〜12:00の3時間利用／告別式 10:00〜11:00（火葬11:30予約）／12:00から次の業者が飾り付けに入る／【1日借り・午前の告別式】9:00〜12:00の利用／9:00 飾り付け → 告別式 10:00〜11:00（火葬11:30予約）→ 12:00 完全撤収／【1日借り・午後の告別式】12:00〜15:00の利用／12:00 飾り付け → 告別式 13:00〜14:00（火葬14:30予約）→ 15:00 完全撤収",
  fee:{m:10000,nm:70000},hallNm:"yes",cremNm:"yes",wait:"7室(最大72席)",waitFee:{m:3000,nm:8000},
  tel:"0493-22-4279",fax:"0493-22-5695",booking:"web+tel",bookingUrl:"https://higashimatsuyamasaijou.com/reservation/",hp:"https://higashimatsuyamasaijou.com/",departMin:null,
+ departNote:"【場内（斎場の式場）】火葬予約時間の30分前に出棺／【坂戸駅前会館】遅れなければ60分前／余裕を持つなら90分前で、10〜15分遅らせて出棺（斎場まで約30分）／※受け入れは予約時間の35分前から",
  note:"火葬炉6基・動物炉1基。葬祭場1室（親族控室・僧侶控室付）。待合室7室（最大72席）。霊安室有。駐車場約200台。区域外は希望日2日前から受付。友引日火葬不可。1/1・1/2休場。WEB空き確認→電話予約。【重要】仕出し料理は斎場指定業者のみ。当社はヘリテイジリゾート手配。"},
 {id:17,name:"越生斎場",addr:"入間郡越生町大字鹿下338番地6",op:"広域静苑組合",tp:"public",fac:["c"],mun:["越生町","毛呂山町","鶴ヶ島市","鳩山町","坂戸市"],
  halls:[],fee:{m:10000,nm:80000},hallNm:"-",cremNm:"yes",wait:"6室(各35名)",waitFee:{m:3000,nm:10000},
@@ -791,9 +793,12 @@ function renderItem(s){
   if(s.fac.includes("h")&&s.halls&&s.halls.length>0){
     const hallStr=s.halls.map(x=>`${esc(x.n)}：${typeof x.s==="number"?x.s+"席":x.s+"席"}`).join("<br>");
     h+=`<tr><th>\u{1F3DB}\u{FE0F} 式場（${s.halls.length}室）</th><td>${s.hallMemo?`<span style="font-size:.75rem;color:#c62828">${s.hallMemo.split("／").map(x=>esc(x.trim())).join("<br>")}</span><br>`:''} ${hallStr}</td></tr>`;
+    if(s.hallUse){h+=`<tr><th>\u{1F56F}\u{FE0F} 式場利用方法</th><td><span style="font-size:.85rem">${s.hallUse.split("／").map(x=>{const t=x.trim();return t.startsWith("※")?`<span style="color:#c62828">${esc(t)}</span>`:`<span style="font-weight:600">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
+    if(s.hallDay){h+=`<tr><th>\u{1F5D3}\u{FE0F} 1日借り可能</th><td><span style="font-size:.85rem">${s.hallDay.split("／").map(x=>{const t=x.trim();return t.startsWith("【")?`<span style="font-weight:700;color:var(--navy-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.hallNote){h+=`<tr><th>\u{1F4CB} 式場スケジュール</th><td><span style="font-size:.85rem">${s.hallNote.split("／").map(x=>{const t=x.trim();return t.startsWith("※")?`<span style="color:#c62828">${esc(t)}</span>`:esc(t);}).join("<br>")}</span></td></tr>`;}
     if(s.fac.includes("c"))h+=`<tr><th>組合外の式場利用</th><td>${availTag(s.hallNm)}</td></tr>`;
-    if(s.departMin!==undefined&&s.departMin!==null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td>火葬予約時間の <span style="font-weight:700;color:var(--red)">${s.departMin}分前</span> に出棺</td></tr>`;}
+    if(s.departNote){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="font-size:.85rem">${s.departNote.split("／").map(x=>{const t=x.trim();return t.startsWith("\u{203B}")?`<span style="color:#c62828">${esc(t)}</span>`:t.startsWith("\u{3010}")?`<span style="font-weight:700;color:var(--navy-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
+    else if(s.departMin!==undefined&&s.departMin!==null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td>火葬予約時間の <span style="font-weight:700;color:var(--red)">${s.departMin}分前</span> に出棺</td></tr>`;}
     else if(s.departMin===null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="color:var(--gray-dark);font-size:.75rem">確認中</span></td></tr>`;}
   }
   if(s.mun.length>1)h+=`<tr><th>構成市町村</th><td>${s.mun.map(esc).join("、")}</td></tr>`;
