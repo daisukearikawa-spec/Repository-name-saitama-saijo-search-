@@ -140,6 +140,25 @@ header p{font-size:.85rem;color:var(--gold-light);letter-spacing:.05em}
 .memo-item:last-child{border-bottom:none}
 .memo-date{font-size:.72rem;color:var(--gray-dark);margin-bottom:2px}
 .memo-text{color:#333}
+.memo-warn{font-weight:400;font-size:.7rem;color:#ffcc80;margin-left:6px}
+.memo-empty{padding:10px 12px;font-size:.78rem;color:var(--gray-dark)}
+.memo-item{position:relative;padding-right:58px}
+.memo-badge{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:4px;font-size:.66rem;font-weight:700;vertical-align:middle}
+.memo-badge.fixed{background:var(--gray-mid);color:var(--gray-dark)}
+.memo-del{position:absolute;top:8px;right:10px;background:none;border:1px solid var(--gray-mid);color:var(--gray-dark);border-radius:5px;font-size:.68rem;padding:2px 7px;cursor:pointer;font-family:inherit}
+.memo-del:hover{border-color:var(--red);color:var(--red)}
+.memo-editor{border-top:2px dashed var(--gray-mid);background:#fafaf8;padding:10px 12px}
+.memo-editor-title{font-size:.76rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.memo-input{width:100%;min-height:76px;padding:8px 10px;border:1px solid var(--gray-mid);border-radius:6px;font-family:inherit;font-size:.82rem;line-height:1.6;resize:vertical;box-sizing:border-box}
+.memo-input:focus{outline:none;border-color:var(--navy)}
+.memo-by{width:100%;max-width:220px;margin-top:6px;padding:6px 10px;border:1px solid var(--gray-mid);border-radius:6px;font-family:inherit;font-size:.78rem;box-sizing:border-box}
+.memo-by:focus{outline:none;border-color:var(--navy)}
+.memo-btn-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.btn-memo-save{background:var(--green);color:var(--white)}
+.btn-memo-copy{background:var(--gray-mid);color:var(--navy-dark)}
+.memo-status{margin-top:6px;font-size:.74rem;min-height:1.1em;line-height:1.5}
+.memo-status.ok{color:var(--green);font-weight:600}
+.memo-status.err{color:var(--red);font-weight:600}
 footer{text-align:center;padding:20px;font-size:.75rem;color:var(--gray-dark);border-top:1px solid var(--gray-mid);margin-top:10px}
 footer .warn{color:var(--red);font-weight:600}
 @media(max-width:600px){
@@ -284,7 +303,7 @@ const D=[
  note:"火葬炉6基。待合室7室(各48席)。式場は組合内住民のみ(特別理由で組合外可・料金2倍)。棺サイズ上限:幅70cm×長220cm×高60cm。小動物火葬あり。"},
 {id:10,name:"上尾伊奈斎場つつじ苑",addr:"上尾市大字瓦葺150番地",op:"公益財団法人 上尾市地域振興公社",tp:"public",fac:["c","h"],mun:["上尾市","伊奈町"],
  halls:[{n:"第1式場",s:60},{n:"第2式場",s:80},{n:"第3式場",s:150}],
- fee:{m:7000,nm:61900},hallNm:"yes",cremNm:"yes",wait:"6室(各38席)",waitFee:{m:2300,nm:4600},
+ fee:{m:7000,nm:61900},hallNm:"yes",cremNm:"yes",hallNmNote:"組合員との差は金額のみ。火葬時間や式場の利用についての制約は無し。",wait:"6室(各38席)",waitFee:{m:2300,nm:4600},
  tel:"048-720-7870",fax:"048-723-8321",booking:"web",bookingUrl:"https://ageoina-saijotsutsujien.jp/cl_book01_toppage.html",hp:"https://www.ageo-kousya.or.jp/tsutsuji/",departMin:null,
  note:"常設祭壇（仏式3・正宗1・神式1・キリスト教1）外部持込不可。友引日は火葬休業（通夜利用可）。友引前日は通夜不可。小動物火葬あり。"},
 {id:11,name:"県央みずほ斎場",addr:"鴻巣市境1143番地",op:"県央みずほ広域事務組合",tp:"public",fac:["c","h"],mun:["鴻巣市","桶川市","北本市"],
@@ -822,7 +841,7 @@ function renderItem(s){
     if(s.hallUse){h+=`<tr><th>\u{1F56F}\u{FE0F} 式場利用方法</th><td><span style="font-size:.85rem">${s.hallUse.split("／").map(x=>{const t=x.trim();return t.startsWith("※")?`<span style="color:#c62828">${esc(t)}</span>`:`<span style="font-weight:600">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.hallDay){h+=`<tr><th>\u{1F5D3}\u{FE0F} 1日借り可能</th><td><span style="font-size:.85rem">${s.hallDay.split("／").map(x=>{const t=x.trim();return t.startsWith("【")?`<span style="font-weight:700;color:var(--navy-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.hallNote){h+=`<tr><th>\u{1F4CB} 式場スケジュール</th><td><span style="font-size:.85rem">${s.hallNote.split("／").map(x=>{const t=x.trim();return t.startsWith("※")?`<span style="color:#c62828">${esc(t)}</span>`:esc(t);}).join("<br>")}</span></td></tr>`;}
-    if(s.fac.includes("c"))h+=`<tr><th>組合外の式場利用</th><td>${availTag(s.hallNm)}</td></tr>`;
+    if(s.fac.includes("c"))h+=`<tr><th>組合外の式場利用</th><td>${availTag(s.hallNm)}${s.hallNmNote?` <span style="font-size:.75rem;color:var(--green);font-weight:600">${esc(s.hallNmNote)}</span>`:''}</td></tr>`;
     if(s.departNote){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="font-size:.85rem">${s.departNote.split("／").map(x=>{const t=x.trim();return t.startsWith("\u{203B}")?`<span style="color:#c62828">${esc(t)}</span>`:t.startsWith("\u{3010}")?`<span style="font-weight:700;color:var(--navy-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
     else if(s.departMin!==undefined&&s.departMin!==null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td>火葬予約時間の <span style="font-weight:700;color:var(--red)">${s.departMin}分前</span> に出棺</td></tr>`;}
     else if(s.departMin===null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="color:var(--gray-dark);font-size:.75rem">確認中</span></td></tr>`;}
@@ -841,16 +860,11 @@ function renderItem(s){
   else h+=`<span class="btn-action btn-disabled">\u{1F4CB} 詳細資料準備中</span>`;
   if(GALLERY[s.id]&&GALLERY[s.id].length>0)h+=`<button class="btn-action btn-gallery" onclick="openGallery(${s.id})">\u{1F4F7} 画像</button>`;
   else h+=`<span class="btn-action btn-disabled">\u{1F4F7} 画像準備中</span>`;
-  if(MEMO[s.id])h+=`<button class="btn-action btn-memo" onclick="toggleMemo(${s.id})">\u{1F4DD} 現場メモ（${MEMO[s.id].length}件）</button>`;
+  h+=`<button class="btn-action btn-memo" onclick="toggleMemo(this,${s.id})">\u{1F4DD} 現場メモ（<span class="memo-count">${memoAll(s.id).length}</span>件）</button>`;
   if(PAMPH[s.id])PAMPH[s.id].forEach(p=>{const ph=p.file.startsWith('http')?p.file:encodeURIComponent(p.file);h+=`<a href="${ph}" target="_blank" rel="noopener" class="btn-action btn-pamph">\u{1F4D6} ${esc(p.label)}</a>`;});
   h+=`</div>`;
 
-  if(MEMO[s.id]){
-    h+=`<div class="memo-box" id="memo-${s.id}">`;
-    h+=`<div class="memo-header">\u{1F4DD} 現場メモ</div>`;
-    MEMO[s.id].forEach(m=>{h+=`<div class="memo-item"><div class="memo-date">${esc(m.d)}</div><div class="memo-text">${esc(m.t)}</div></div>`;});
-    h+=`</div>`;
-  }
+  h+=memoBoxHtml(s);
 
   h+=`</div>`;
   return h;
@@ -891,8 +905,104 @@ function closeDetail(){
   document.body.style.overflow="";
 }
 
-/* ===== Memo ===== */
-function toggleMemo(id){document.getElementById("memo-"+id).classList.toggle("open");}
+/* ===== Memo（現場メモ：アプリ内で直接入力・この端末に保存） ===== */
+/* 保存先はブラウザのlocalStorage。書いたメモを他の人にも見せたい時は
+   「全文コピー」でテキストを取り出し、上の const MEMO に貼れば確定メモになる。 */
+const MEMO_KEY="saijo_memo_v1";
+function memoStore(){try{return JSON.parse(localStorage.getItem(MEMO_KEY)||"{}");}catch(e){return{};}}
+function memoStoreSet(o){try{localStorage.setItem(MEMO_KEY,JSON.stringify(o));return true;}catch(e){return false;}}
+function memoToday(){const n=new Date();return n.getFullYear()+"年"+(n.getMonth()+1)+"月"+n.getDate()+"日";}
+function memoRid(v){return String(v||"").replace(/[^A-Za-z0-9_-]/g,"");}
+function memoNewRid(){return "m"+Date.now()+"-"+Math.floor(Math.random()*100000);}
+
+function memoAll(id){
+  const a=(MEMO[id]||[]).map(m=>({d:m.d,t:m.t,by:m.by||"",fixed:true}));
+  const b=(memoStore()[id]||[]).map(m=>({d:m.d,t:m.t,by:m.by||"",rid:m.rid}));
+  return a.concat(b);
+}
+
+function memoListHtml(id){
+  const l=memoAll(id);
+  if(!l.length)return`<div class="memo-empty">まだメモはありません。下の欄に入力して保存してください。</div>`;
+  return l.map(m=>{
+    const tag=m.fixed?`<span class="memo-badge fixed">確定</span>`:"";
+    const del=m.rid?`<button class="memo-del" onclick="memoDel(this,${id},'${memoRid(m.rid)}')">削除</button>`:"";
+    return`<div class="memo-item"><div class="memo-date">${esc(m.d)}${m.by?" ・ "+esc(m.by):""}${tag}</div><div class="memo-text">${esc(m.t)}</div>${del}</div>`;
+  }).join("");
+}
+
+function memoBoxHtml(s){
+  return`<div class="memo-box" data-sid="${s.id}">`
+    +`<div class="memo-header">\u{1F4DD} 現場メモ<span class="memo-warn">（この端末に保存されます）</span></div>`
+    +`<div class="memo-list">${memoListHtml(s.id)}</div>`
+    +`<div class="memo-editor">`
+    +`<div class="memo-editor-title">\u{270F}\u{FE0F} メモを追加</div>`
+    +`<textarea class="memo-input" placeholder="例）WEBで空き確認→電話予約。故人名・住所・申請者名・ペースメーカー有無を伝える。当日は斎場利用承認書を持参。"></textarea>`
+    +`<input type="text" class="memo-by" placeholder="記入者（任意）">`
+    +`<div class="memo-btn-row">`
+    +`<button class="btn-action btn-memo-save" onclick="memoSave(this,${s.id})">\u{1F4BE} 保存</button>`
+    +`<button class="btn-action btn-memo-copy" onclick="memoCopy(this,${s.id})">\u{1F4CB} 全文コピー</button>`
+    +`</div>`
+    +`<div class="memo-status"></div>`
+    +`</div></div>`;
+}
+
+function toggleMemo(el,id){
+  const b=el.closest(".saijo-item").querySelector(".memo-box");
+  b.classList.toggle("open");
+  if(b.classList.contains("open"))b.querySelector(".memo-input").focus();
+}
+
+/* 同じ施設が「検索結果」と「全斎場一覧」の両方に描画されるため、全複製をまとめて更新する */
+function memoRefreshAll(){
+  document.querySelectorAll(".saijo-item").forEach(it=>{
+    const box=it.querySelector(".memo-box");if(!box)return;
+    const id=parseInt(box.dataset.sid,10);
+    const l=it.querySelector(".memo-list");if(l)l.innerHTML=memoListHtml(id);
+    const c=it.querySelector(".memo-count");if(c)c.textContent=memoAll(id).length;
+  });
+}
+
+function memoSave(el,id){
+  const box=el.closest(".memo-box");
+  const ta=box.querySelector(".memo-input");
+  const st=box.querySelector(".memo-status");
+  const t=ta.value.trim();
+  if(!t){st.className="memo-status err";st.textContent="メモ本文を入力してください。";ta.focus();return;}
+  if(t.length>4000){st.className="memo-status err";st.textContent="長すぎます（4,000字以内にしてください）。";return;}
+  const by=(box.querySelector(".memo-by").value||"").trim();
+  const store=memoStore();
+  (store[id]=store[id]||[]).push({rid:memoNewRid(),d:memoToday(),t:t,by:by});
+  if(!memoStoreSet(store)){
+    st.className="memo-status err";
+    st.textContent="\u{26A0} 保存できませんでした（ブラウザの保存領域が無効か容量オーバーです）。本文は消していないので、コピーして控えを取ってください。";
+    return;
+  }
+  ta.value="";
+  memoRefreshAll();
+  st.className="memo-status ok";st.textContent="\u{2713} 保存しました";
+}
+
+function memoDel(el,id,rid){
+  const box=el.closest(".memo-box");
+  const st=box.querySelector(".memo-status");
+  const store=memoStore();
+  store[id]=(store[id]||[]).filter(m=>m.rid!==rid);
+  if(!store[id].length)delete store[id];
+  if(!memoStoreSet(store)){st.className="memo-status err";st.textContent="\u{26A0} 削除できませんでした。";return;}
+  memoRefreshAll();
+  st.className="memo-status ok";st.textContent="\u{2713} 削除しました";
+}
+
+function memoCopy(el,id){
+  const box=el.closest(".memo-box");
+  const st=box.querySelector(".memo-status");
+  const l=memoAll(id);
+  if(!l.length){st.className="memo-status err";st.textContent="コピーするメモがありません。";return;}
+  const f=D.find(x=>x.id===id);
+  const txt=(f?f.name:"")+" 現場メモ\n\n"+l.map(m=>"【"+m.d+(m.by?"・"+m.by:"")+"】\n"+m.t).join("\n\n");
+  navigator.clipboard.writeText(txt).then(()=>{st.className="memo-status ok";st.textContent="\u{2713} "+l.length+"件をコピーしました";}).catch(()=>{st.className="memo-status err";st.textContent="コピーに失敗しました。手動で選択してコピーしてください。";});
+}
 
 /* ===== Gallery ===== */
 let galData=[],galIdx=0;
