@@ -15,6 +15,7 @@
   --white:#fff;--text:#2c2c2c;--text-light:#555;
   --red:#c0392b;--green:#27713b;
 }
+html{font-size:118.75%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;background:var(--gray);color:var(--text);line-height:1.7;min-height:100vh}
 header{background:linear-gradient(135deg,var(--navy-dark),var(--navy));color:var(--white);padding:28px 20px 24px;text-align:center;border-bottom:3px solid var(--gold)}
 header h1{font-size:1.5rem;font-weight:700;letter-spacing:.08em;margin-bottom:6px}
@@ -282,9 +283,9 @@ const D=[
  tel:"048-242-5414",fax:"048-242-5415",booking:"web",bookingUrl:"https://megurinomori.seagulloffice.com/kawaguchi",hp:"http://www.kawaguchishi-megurinomori.jp/",
  note:"火葬専用。火葬炉10基。※市民外は前々日17時以降に空きがあれば利用可（現実的に難しい）。休業日：1/1〜1/3・友引日。新井宿駅徒歩15分。"},
 {id:6,name:"川越市斎場・市民聖苑やすらぎのさと",addr:"川越市大字小仙波786-1",op:"川越市",tp:"public",fac:["c","h"],mun:["川越市"],
- halls:[{n:"第1・2式場",s:150},{n:"第3・4式場",s:60},{n:"第5式場",s:100},{n:"第6式場",s:30},{n:"小式場1・2",s:30}],
- fee:{m:0,nm:48000},hallNm:"cond",cremNm:"yes",wait:"小(40人)8室・大(60人)2室",waitFee:{m:0,nm:0},
- tel:"049-226-0090",fax:"049-226-7088",booking:"web",bookingUrl:"https://www.kawagoe-saijo.jp/yoyaku/",hp:"https://www.city.kawagoe.saitama.jp/kurashi/1004113/1004116/1004117.html",departMin:null,departNote:"【場内（やすらぎのさと）】火葬予約時間の20分前ぴったりに霊柩車・バスが到着／例：告別式10:30〜11:30でも霊柩車は11:40着（12:00火葬の場合）／※早めの出棺は不可。お別れの時間で調整すること",
+ halls:[{n:"第1・2式場",s:150,f:40000},{n:"第3・4式場",s:60,f:15000},{n:"第5式場",s:100,f:50000},{n:"第6式場",s:30,f:8000},{n:"小式場1・2",s:30,f:20000}],hallFeeNote:"※設営は2回（2日間）借りる",
+ fee:{m:0,nm:48000},hallNm:"cond",cremNm:"yes",wait:"小(40人)8室・大(60人)2室",waitFee:null,waitFees:[{n:"小(40人)8室",m:2000,nm:4000},{n:"大(60人)2室",m:3000,nm:6000}],waitFeeLabel:"市外",
+ tel:"049-226-0090",fax:"049-226-7088",booking:"web",bookingUrl:"https://www.kawagoe-saijo.jp/yoyaku/",hp:"https://www.city.kawagoe.saitama.jp/kurashi/1004113/1004116/1004117.html",departMin:null,departNote:"【場内（やすらぎのさと）】火葬予約時間の20分前ぴったりに霊柩車・バスが到着／例：告別式10:30〜11:30でも霊柩車は11:40着（12:00火葬の場合）／※早めの出棺は不可。お別れの時間で調整すること",bookingNote:"設営が有る時は「通夜有り」から選択（空きの〇は通夜（飾り）日）／一日葬の場合は「通夜なし」から選択（〇は告別式日）／収骨後に食事する場合は「法要室」を借りる",departInfo:"式場では火葬時間は決まっていない／予約時間の30分前に出棺時間を設定／例：11:30予約の場合 → 10:00〜11:00の告別式／やすらぎのさとは火葬予約時間の20分前に霊柩車とバスが来る",infoRows:[{t:"申請について",v:"市役所で許可証を取る（申請用紙有り）／システムで本登録／支払いは事前でも火葬当日でも可"}],
  note:"市民火葬無料。火葬はどなたでも可。式場は故人or喪主が市民の場合利用可。祭壇持込不可。式場計8室。冬期(12〜3月)は1日20件。"},
 {id:7,name:"所沢市斎場",addr:"所沢市北原町1282番地",op:"所沢市（指定管理：所沢市公共施設管理公社）",tp:"public",fac:["c","h"],mun:["所沢市"],
  halls:[{n:"第1式場",s:85},{n:"第2式場",s:50},{n:"第3式場",s:50},{n:"第5式場",s:40}],hallMemo:"※WEB予約の空きの〇は火葬日／※出棺は予約時間の30分前",
@@ -830,12 +831,14 @@ function renderItem(s){
   }
   if(s.wait){
     let wStr=`${esc(s.wait)}`;
-    if(s.waitFee){wStr+=` <span style="font-size:.75rem;color:var(--gray-dark)">｜</span> <span style="font-weight:600">${yen(s.waitFee.m)}</span> <span style="font-size:.75rem;color:var(--gray-dark)">／組合外</span> <span style="font-weight:600;color:var(--red)">${yen(s.waitFee.nm)}</span>`;}
+    if(s.waitFees){const lb=esc(s.waitFeeLabel||"組合外");wStr=s.waitFees.map(w=>`<span style="display:inline-block;min-width:7.5em">${esc(w.n)}</span><span style="font-weight:600">${yen(w.m)}</span> <span style="font-size:.75rem;color:var(--gray-dark)">／${lb}</span> <span style="font-weight:600;color:var(--red)">${yen(w.nm)}</span>`).join("<br>");}
+    else if(s.waitFee){wStr+=` <span style="font-size:.75rem;color:var(--gray-dark)">｜</span> <span style="font-weight:600">${yen(s.waitFee.m)}</span> <span style="font-size:.75rem;color:var(--gray-dark)">／組合外</span> <span style="font-weight:600;color:var(--red)">${yen(s.waitFee.nm)}</span>`;}
     if(s.waitNote){wStr+=`<br><span style="font-size:.75rem;color:#6d5600">\u{26A0}\u{FE0F} ${esc(s.waitNote)}</span>`;}
     h+=`<tr><th>\u{2615} 待合室</th><td>${wStr}</td></tr>`;
   }
   if(s.fac.includes("h")&&s.halls&&s.halls.length>0){
-    const hallStr=s.halls.map(x=>`${esc(x.n)}：${typeof x.s==="number"?x.s+"席":x.s+"席"}`).join("<br>");
+    let hallStr=s.halls.map(x=>x.f!=null?`<span style="display:inline-block;min-width:8.5em">${esc(x.n)}：${x.s}席</span><span style="font-weight:700;color:var(--navy-dark)">${yen(x.f)}</span> <span style="font-size:.75rem;color:var(--gray-dark)">／1回(1日)</span>`:`${esc(x.n)}：${typeof x.s==="number"?x.s+"席":x.s+"席"}`).join("<br>");
+    if(s.hallFeeNote)hallStr+=`<br><span style="font-size:.75rem;color:#c62828">${esc(s.hallFeeNote)}</span>`;
     h+=`<tr><th>\u{1F3DB}\u{FE0F} 式場（${s.halls.length}室）</th><td>${s.hallMemo?`<span style="font-size:.75rem;color:#c62828">${s.hallMemo.split("／").map(x=>esc(x.trim())).join("<br>")}</span><br>`:''} ${hallStr}</td></tr>`;
     if(s.hallFee){h+=`<tr><th>\u{1F4B4} 式場利用料金</th><td><span style="font-size:.85rem">${s.hallFee.split("／").map(x=>{const t=x.trim();return t.startsWith("※")?`<span style="color:#c62828">${esc(t)}</span>`:esc(t).replace(/([0-9,]+円)/g,'<span style="font-weight:700;color:var(--navy-dark)">$1</span>');}).join("<br>")}</span></td></tr>`;}
     if(s.hallUse){h+=`<tr><th>\u{1F56F}\u{FE0F} 式場利用方法</th><td><span style="font-size:.85rem">${s.hallUse.split("／").map(x=>{const t=x.trim();return t.startsWith("※")?`<span style="color:#c62828">${esc(t)}</span>`:`<span style="font-weight:600">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
@@ -845,6 +848,9 @@ function renderItem(s){
     if(s.departNote){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="font-size:.85rem">${s.departNote.split("／").map(x=>{const t=x.trim();return t.startsWith("\u{203B}")?`<span style="color:#c62828">${esc(t)}</span>`:t.startsWith("\u{3010}")?`<span style="font-weight:700;color:var(--navy-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
     else if(s.departMin!==undefined&&s.departMin!==null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td>火葬予約時間の <span style="font-weight:700;color:var(--red)">${s.departMin}分前</span> に出棺</td></tr>`;}
     else if(s.departMin===null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="color:var(--gray-dark);font-size:.75rem">確認中</span></td></tr>`;}
+    if(s.bookingNote){h+=`<tr><th>※システム予約について</th><td><span style="font-size:.85rem">${s.bookingNote.split("／").map(x=>{const t=x.trim();return `<span style="display:inline-block;padding-left:1em;text-indent:-1em">・${esc(t).replace(/(「[^」]+」)/g,'<span style="font-weight:700;color:var(--navy-dark)">$1</span>')}</span>`;}).join("<br>")}</span></td></tr>`;}
+    if(s.departInfo){h+=`<tr><th>出棺時間について</th><td><span style="font-size:.85rem">${s.departInfo.split("／").map(x=>{const t=x.trim();return t.startsWith("例")?`<span style="display:inline-block;padding-left:1em;color:var(--gray-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em;text-indent:-1em">・${esc(t).replace(/(\d+分前)/g,'<span style="font-weight:700;color:var(--red)">$1</span>')}</span>`;}).join("<br>")}</span></td></tr>`;}
+    if(s.infoRows){s.infoRows.forEach(r=>{h+=`<tr><th>${esc(r.t)}</th><td><span style="font-size:.85rem">${r.v.split("／").map(x=>`<span style="display:inline-block;padding-left:1em;text-indent:-1em">・${esc(x.trim())}</span>`).join("<br>")}</span></td></tr>`;});}
   }
   if(s.mun.length>1)h+=`<tr><th>構成市町村</th><td>${s.mun.map(esc).join("、")}</td></tr>`;
   h+=`</table>`;
