@@ -300,7 +300,7 @@ const D=[
 {id:9,name:"入間東部広域斎場 しののめの里",addr:"富士見市下南畑70番地1",op:"入間東部地区事務組合",tp:"public",fac:["c","h"],mun:["富士見市","ふじみ野市","三芳町"],
  halls:[{n:"第1式場",s:80},{n:"第2式場",s:40},{n:"第3式場",s:120}],
  fee:{m:10000,nm:80000},hallNm:"no",cremNm:"yes",wait:"7室(各48席)",waitFee:{m:0,nm:0},
- tel:"049-275-3030",fax:"049-275-3038",booking:"web",bookingUrl:"https://saijyo3.seagulloffice.com/iruma/user",hp:"https://shinonomenosato.or.jp/",departMin:null,
+ tel:"049-275-3030",fax:"049-275-3038",booking:"web",bookingUrl:"https://saijyo3.seagulloffice.com/iruma/user",hp:"https://shinonomenosato.or.jp/",departMin:null,departNote:"【場内】火葬予約時間の30分前に出棺",acceptNote:"火葬予約時間の35分前から霊柩車受け入れ／【外火葬の場合】30分前到着を目指して設定／【直葬の場合】35分前集合／告別室にて読経・花入れOK／※火葬予約時間の10分前には告別室を出る（お別れ正味20分くらい）",
  note:"火葬炉6基。待合室7室(各48席)。式場は組合内住民のみ(特別理由で組合外可・料金2倍)。棺サイズ上限:幅70cm×長220cm×高60cm。小動物火葬あり。"},
 {id:10,name:"上尾伊奈斎場つつじ苑",addr:"上尾市大字瓦葺150番地",op:"公益財団法人 上尾市地域振興公社",tp:"public",fac:["c","h"],mun:["上尾市","伊奈町"],
  halls:[{n:"第1式場",s:60},{n:"第2式場",s:80},{n:"第3式場",s:150}],
@@ -848,6 +848,7 @@ function renderItem(s){
     if(s.departNote){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="font-size:.85rem">${s.departNote.split("／").map(x=>{const t=x.trim();return t.startsWith("\u{203B}")?`<span style="color:#c62828">${esc(t)}</span>`:t.startsWith("\u{3010}")?`<span style="font-weight:700;color:var(--navy-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
     else if(s.departMin!==undefined&&s.departMin!==null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td>火葬予約時間の <span style="font-weight:700;color:var(--red)">${s.departMin}分前</span> に出棺</td></tr>`;}
     else if(s.departMin===null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="color:var(--gray-dark);font-size:.75rem">確認中</span></td></tr>`;}
+    if(s.acceptNote){h+=`<tr><th>\u{1F69A} 火葬受け入れ時間</th><td><span style="font-size:.85rem">${s.acceptNote.split("／").map(x=>{const t=x.trim();return t.startsWith("\u{203B}")?`<span style="color:#c62828">${esc(t)}</span>`:t.startsWith("\u{3010}")?`<span style="font-weight:700;color:var(--navy-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.bookingNote){h+=`<tr><th>※システム予約について</th><td><span style="font-size:.85rem">${s.bookingNote.split("／").map(x=>{const t=x.trim();return `<span style="display:inline-block;padding-left:1em;text-indent:-1em">・${esc(t).replace(/(「[^」]+」)/g,'<span style="font-weight:700;color:var(--navy-dark)">$1</span>')}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.departInfo){h+=`<tr><th>出棺時間について</th><td><span style="font-size:.85rem">${s.departInfo.split("／").map(x=>{const t=x.trim();return t.startsWith("例")?`<span style="display:inline-block;padding-left:1em;color:var(--gray-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em;text-indent:-1em">・${esc(t).replace(/(\d+分前)/g,'<span style="font-weight:700;color:var(--red)">$1</span>')}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.infoRows){s.infoRows.forEach(r=>{h+=`<tr><th>${esc(r.t)}</th><td><span style="font-size:.85rem">${r.v.split("／").map(x=>`<span style="display:inline-block;padding-left:1em;text-indent:-1em">・${esc(x.trim())}</span>`).join("<br>")}</span></td></tr>`;});}
