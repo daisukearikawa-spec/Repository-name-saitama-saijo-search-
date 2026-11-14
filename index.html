@@ -300,7 +300,7 @@ const D=[
 {id:9,name:"入間東部広域斎場 しののめの里",addr:"富士見市下南畑70番地1",op:"入間東部地区事務組合",tp:"public",fac:["c","h"],mun:["富士見市","ふじみ野市","三芳町"],
  halls:[{n:"第1式場",s:80},{n:"第2式場",s:40},{n:"第3式場",s:120}],
  fee:{m:10000,nm:80000},hallNm:"no",cremNm:"yes",wait:"7室(各48席)",waitFee:{m:0,nm:0},
- tel:"049-275-3030",fax:"049-275-3038",booking:"web",bookingUrl:"https://saijyo3.seagulloffice.com/iruma/user",hp:"https://shinonomenosato.or.jp/",departMin:null,departNote:"【場内】火葬予約時間の30分前に出棺",acceptNote:"火葬予約時間の35分前から霊柩車受け入れ／【外火葬の場合】30分前到着を目指して設定／【直葬の場合】35分前集合／告別室にて読経・花入れOK／※火葬予約時間の10分前には告別室を出る（お別れ正味20分くらい）",
+ tel:"049-275-3030",fax:"049-275-3038",booking:"web",bookingUrl:"https://saijyo3.seagulloffice.com/iruma/user",hp:"https://shinonomenosato.or.jp/",departMin:null,departNote:"【場内】火葬予約時間の30分前に出棺",acceptNote:"火葬予約時間の35分前から霊柩車受け入れ／【外火葬の場合】30分前到着を目指して設定／【直葬の場合】35分前集合／告別室にて読経・花入れOK／※火葬予約時間の10分前には告別室を出る（お別れ正味20分くらい）",applyNote:"火葬許可証を取得後、詳細を入力／しののめの里事務所へ許可証を持参し、支払いが終わると本登録完了／※利用日の2日前の〇時までに本登録しないとキャンセルになるので注意",
  note:"火葬炉6基。待合室7室(各48席)。式場は組合内住民のみ(特別理由で組合外可・料金2倍)。棺サイズ上限:幅70cm×長220cm×高60cm。小動物火葬あり。"},
 {id:10,name:"上尾伊奈斎場つつじ苑",addr:"上尾市大字瓦葺150番地",op:"公益財団法人 上尾市地域振興公社",tp:"public",fac:["c","h"],mun:["上尾市","伊奈町"],
  halls:[{n:"第1式場",s:60},{n:"第2式場",s:80},{n:"第3式場",s:150}],
@@ -448,7 +448,7 @@ const PAMPH={
  5:[{label:"斎場パンフレット",file:"pamphlet.pdf"},{label:"交通案内（電車）",file:"map_train.pdf"},{label:"交通案内（地図）",file:"map.pdf"},{label:"利用のご案内",file:"1-1.pdf"},{label:"売店商品一覧",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-2.pdf"},{label:"売店注文用紙",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-3.pdf"},{label:"仕出し弁当・おしのぎ一覧",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-4.pdf"},{label:"仕出し弁当注文用紙",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-5-1.pdf"},{label:"仕出し弁当注文用紙（記入例）",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-5-2.pdf"},{label:"おしのぎ注文用紙",file:"http://www.kawaguchishi-megurinomori.jp/assets/images/pdf/1-6.pdf"}],
  6:[{label:"利用申請書類",file:"kasousougirenrakuhyou.pdf"}],
  8:[{label:"予約確認票",file:"予約確認票【令和6年度版】.pdf"},{label:"使用許可申請書",file:"使用許可申請書【令和版】.pdf"}],
- 9:[{label:"パンフレット",file:"d1c1bc30338534871bf27ec1a80df6da.pdf"}],
+ 9:[{label:"パンフレット",file:"d1c1bc30338534871bf27ec1a80df6da.pdf"},{label:"しののめの里平面図",file:"しののめの里平面図.pdf"}],
  10:[{label:"利用の手引き",file:"117141.pdf"},{label:"交通案内図",file:"access.pdf"}],
  13:[{label:"利用の手引き",file:"siori.pdf"}],
  14:[{label:"利用案内",file:"memorial_tone_howto23.pdf"}],
@@ -849,6 +849,7 @@ function renderItem(s){
     else if(s.departMin!==undefined&&s.departMin!==null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td>火葬予約時間の <span style="font-weight:700;color:var(--red)">${s.departMin}分前</span> に出棺</td></tr>`;}
     else if(s.departMin===null){h+=`<tr><th>\u{1F6A9} 出棺時間</th><td><span style="color:var(--gray-dark);font-size:.75rem">確認中</span></td></tr>`;}
     if(s.acceptNote){h+=`<tr><th>\u{1F69A} 火葬受け入れ時間</th><td><span style="font-size:.85rem">${s.acceptNote.split("／").map(x=>{const t=x.trim();return t.startsWith("\u{203B}")?`<span style="color:#c62828">${esc(t)}</span>`:t.startsWith("\u{3010}")?`<span style="font-weight:700;color:var(--navy-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
+    if(s.applyNote){h+=`<tr><th>\u{1F4DD} 申請方法</th><td><span style="font-size:.85rem">${s.applyNote.split("／").map(x=>{const t=x.trim();return t.startsWith("\u{203B}")?`<span style="color:#c62828;font-weight:700">${esc(t)}</span>`:t.startsWith("\u{3010}")?`<span style="font-weight:700;color:var(--navy-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em">${esc(t)}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.bookingNote){h+=`<tr><th>※システム予約について</th><td><span style="font-size:.85rem">${s.bookingNote.split("／").map(x=>{const t=x.trim();return `<span style="display:inline-block;padding-left:1em;text-indent:-1em">・${esc(t).replace(/(「[^」]+」)/g,'<span style="font-weight:700;color:var(--navy-dark)">$1</span>')}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.departInfo){h+=`<tr><th>出棺時間について</th><td><span style="font-size:.85rem">${s.departInfo.split("／").map(x=>{const t=x.trim();return t.startsWith("例")?`<span style="display:inline-block;padding-left:1em;color:var(--gray-dark)">${esc(t)}</span>`:`<span style="display:inline-block;padding-left:1em;text-indent:-1em">・${esc(t).replace(/(\d+分前)/g,'<span style="font-weight:700;color:var(--red)">$1</span>')}</span>`;}).join("<br>")}</span></td></tr>`;}
     if(s.infoRows){s.infoRows.forEach(r=>{h+=`<tr><th>${esc(r.t)}</th><td><span style="font-size:.85rem">${r.v.split("／").map(x=>`<span style="display:inline-block;padding-left:1em;text-indent:-1em">・${esc(x.trim())}</span>`).join("<br>")}</span></td></tr>`;});}
